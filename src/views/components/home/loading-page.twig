@@ -1,0 +1,201 @@
+{% if component.enable %}
+<div class="custom-loading-screen"
+     style="
+        --loader-color: {{ component.loader_color | default('#ffffff') }};
+     ">
+    {# طبقة الخلفية الملونة #}
+    <div class="loading-backdrop"
+         style="
+            background-color: {{ component.background_color | default('#000000') }};
+            opacity: {{ component.background_opacity | default('1') }};
+         ">
+    </div>
+    
+    {# طبقة المحتوى #}
+    <div class="loading-content">
+        
+        {# === شعار مع تأثير نبض === #}
+        {% if component.style == 'pulse' and component.logo %}
+            <img src="{{ component.logo }}"
+                 alt="Loading Logo"
+                 class="loading-logo pulse">
+        {% endif %}
+
+        {# === حركة دائرية (Spinner) === #}
+        {% if component.style == 'spinner' %}
+            <div class="loading-spinner-wrapper">
+                {% if component.logo %}
+                    <img src="{{ component.logo }}" alt="Loading Logo" class="loading-logo-static">
+                {% endif %}
+                <div class="loading-spinner"></div>
+            </div>
+        {% endif %}
+
+        {# === نقاط متحركة (Dots) === #}
+        {% if component.style == 'dots' %}
+            {% if component.logo %}
+                <img src="{{ component.logo }}" alt="Loading Logo" class="loading-logo-static">
+            {% endif %}
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        {% endif %}
+
+        {# العبارة الترحيبية #}
+        {% if component.welcome_text %}
+            <p class="loading-welcome-text">
+                {{ component.welcome_text }}
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            const loader = document.querySelector('.custom-loading-screen');
+            if (loader) {
+                loader.classList.add('hide-loader');
+                setTimeout(() => loader.remove(), 600);
+            }
+        }, 500);
+    });
+</script>
+
+<style>
+.custom-loading-screen {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+}
+
+.loading-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-loading-screen.hide-loader {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-logo-static {
+    max-width: 140px;
+    width: 35vw;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* ===== 1. شعار مع تأثير نبض ===== */
+.loading-logo.pulse {
+    max-width: 160px;
+    width: 38vw;
+    height: auto;
+    margin-bottom: 18px;
+    animation: pulseAnim 1.4s infinite ease-in-out;
+}
+
+@keyframes pulseAnim {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.7; }
+}
+
+/* ===== 2. حركة دائرية (Spinner) ===== */
+.loading-spinner-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--loader-color);
+    border-radius: 50%;
+    animation: spinnerAnim 1s linear infinite;
+}
+
+@keyframes spinnerAnim {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== 3. نقاط متحركة (Dots) ===== */
+.loading-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.loading-dots span {
+    width: 12px;
+    height: 12px;
+    background-color: var(--loader-color);
+    border-radius: 50%;
+    animation: dotsAnim 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotsAnim {
+    0%, 80%, 100% { 
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ===== العبارة الترحيبية ===== */
+.loading-welcome-text {
+    font-size: 20px;
+    color: var(--loader-color);
+    text-align: center;
+    font-weight: 500;
+    margin: 15px 0 0 0;
+    padding: 0 20px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .loading-logo.pulse,
+    .loading-logo-static { max-width: 120px; width: 40vw; }
+    .loading-spinner { width: 40px; height: 40px; }
+    .loading-dots span { width: 10px; height: 10px; }
+    .loading-welcome-text { font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+    .loading-logo.pulse,
+    .loading-logo-static { max-width: 90px; width: 45vw; }
+    .loading-spinner { width: 35px; height: 35px; }
+    .loading-dots span { width: 8px; height: 8px; }
+    .loading-welcome-text { font-size: 15px; }
+}
+</style>
+{% endif %}

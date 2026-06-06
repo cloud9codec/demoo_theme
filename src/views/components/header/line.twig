@@ -1,0 +1,22 @@
+<section class="decorative-line-section"> 
+  {% if component.enable and component.line %}
+    <div class="decorative-line"></div>
+  {% endif %}
+</section>
+
+<style>
+.decorative-line-section {
+  padding: 20px 0;                /* مسافة فوق وتحت الفاصل */
+  display: flex;
+  justify-content: center;        /* توسيط الفاصل */
+  align-items: center;
+}
+
+.decorative-line-section .decorative-line {
+  width: 60%;                     /* طول الفاصل */
+  height: 30px;                   /* تعديل الحجم بدل 400 */
+  border-radius: 2px;             
+  box-shadow: none;               /* إزالة الظل ليكون شفاف */
+  background: transparent;        /* أهم شيء: شفاف */
+}
+</style>

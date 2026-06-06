@@ -48,35 +48,6 @@
 | theme.settings                                     | object   | dynamic object with values of the `settings` in twilight.json ex. `theme.settings.topnav_is_dark`        |
 | theme.settings.set(settingName, value)             | string   | set global var, then get it {{theme.settings.get('my_var','fallback') }}                                 |
 | theme.settings.get(settingName, default=null)      | mixed    | get theme setting ex `theme.settings.get('my_var', 'fallback')`                                          |
-| user                                               | User     | Current user/Guest                                                                                       |
-| user.first_name                                    | string   |                                                                                                          |
-| user.last_name                                     | string   |                                                                                                          |
-| user.avatar                                        | string   |                                                                                                          |
-| user.city                                          | ?string  |                                                                                                          |
-| user.country                                       | ?string  |                                                                                                          |
-| user.full_name                                     | string   | link:`first_name` `last_name`                                                                            |
-| user.mobile                                        | string   |                                                                                                          |
-| user.email                                         | string   |                                                                                                          |
-| user.gender                                        | ?string  | 'male', 'female'                                                                                         |
-| user.birthday                                      | ?data    |                                                                                                          |
-| user.type                                          | string   | `user`, `guest`                                                                                          |
-| user.country_code                                  | string   | ex: "SA" for user or guest                                                                               |
-| user.currency_code                                 | string   | ex: "SAR"                                                                                                |
-| user.currency                                      | object   |                                                                                                          |
-| user.currency.code                                 | string   | ex: "SAR"                                                                                                |
-| user.currency.name                                 | string   | ex: "ريال سعودي"                                                                                             |
-| user.currency.symbol                               | string   | ex: "ر.س"                                                                                                |
-| user.currency.amount                               | string   | ex: "1.0"                                                                                                |
-| user.currency.country_code                         | string   | lower first two letters from currency code ex: "sa"                                                      |
-| user.language_code                                 | string   |                                                                                                          |
-| user.language                                      | Language | Current user language                                                                                    |
-| user.language.name                                 | string   |                                                                                                          |
-| user.language.is_rtl                               | bool     |                                                                                                          |
-| user.language.code                                 | string   | ex: ar, en                                                                                               |
-| user.language.url                                  | string   | Current url in this lang                                                                                 |
-| user.language.flag                                 | string   | Url of flag for the language                                                                             |
-| user.language.country_code                         | string   | ex: Arabic=>sa, English=>gb                                                                              |
-| user.language.order                                | int      | Sort language in menu                                                                                    |
 #}
 <!DOCTYPE html>
 <html lang="{{ user.language.code }}" dir="{{ user.language.dir }}">
@@ -84,15 +55,51 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ theme.settings.set('placeholder', 'images/placeholder.png') }}
+
+    <script defer data-cfasync="false" crossorigin="anonymous" src="{{ 'product-card.js'|asset }}"></script>
+    <script defer src="{{ 'main-menu.js'|asset }}"></script>
+    {% if theme.settings.get('enable_add_product_toast', true) %}
+        <script defer src="{{ 'add-product-toast.js'|asset }}"></script>
+    {% endif %}
+
+    {% block head_scripts %}{% endblock %}
+
+
+    <script data-cfasync="false">
+        window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
+        window.imageZoom = "{{theme.settings.get('imageZoom')}}"
+        window.can_access_wallet = {{ user.can_access_wallet | json_encode }}
+        window.enable_more_menu = "{{ theme.settings.get('enable_more_menu', true) }}"
+        window.enable_add_product_toast = "{{ theme.settings.get('enable_add_product_toast', true) }}"
+    </script>
+    
     {% hook 'head:start' %}
     {% hook head %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ 'app.css' | asset }}">
     <link rel="stylesheet" href="{{ theme.font.path|cdn }}"/>
     <link rel="stylesheet" href="{{ 'fonts/sallaicons.css'|cdn }}"/>
+    
     <style>
+        .product-card,
+        .card,
+        .s-product-card,
+        .s-block {
+        background-color: transparent !important;
+        }
+
+        section,
+        .s-section,
+        .banner,
+        .slider {
+        background-color: transparent !important;
+        }
+
+        body > div:last-child {
+         background-color: var(--store-bg) !important;
+        }
         :root {
             --font-main: '{{theme.font.name}}';
             --color-primary: {{ theme.color.primary }};
@@ -104,7 +111,7 @@
     {# tracking services, custom css feature. #}
     {% hook 'head:end' %}
 </head>
-<body id="app" class="overflow-x-hidden {% hook 'body:classes' %} bg-gray-50
+<body id="app" class="theme-raed overflow-x-hidden {% hook 'body:classes' %}
   {{ theme.settings.get('footer_is_dark') ? ' footer-is-dark' : ' footer-is-light' }}
   {{ theme.settings.get('topnav_is_dark') ? ' topnav-is-dark' : '' }}
   {{ theme.settings.get('sticky_add_to_cart') ? ' is-sticky-product-bar' : '' }}
@@ -117,11 +124,16 @@
 <div class="app-inner flex flex-col min-h-full">
     {% hook 'body:start' %}
     {% component 'header.header' %}
+    <main id="main-content" role="main">
     {% block content %}{% endblock %}
+    </main>
     {% component 'footer.footer' %}
 </div>
 {% hook 'body:end' %}
-<script defer src="{{ 'app.js' | asset }}"></script>
+{% if theme.settings.get('enable_add_product_toast', true) %}
+    <salla-add-product-toast></salla-add-product-toast>
+{% endif %}
+<script defer crossorigin="anonymous" src="{{ 'app.js' | asset }}"></script>
 
 {# Twilight Components #}
 <salla-offer-modal></salla-offer-modal>
@@ -129,6 +141,9 @@
 
 {% if user.type=='guest' %}
     <salla-login-modal></salla-login-modal>
+{% endif %}
+{% if store.scope %}
+    <salla-scopes selection="{{ store.scope.display_as == 'popup' ? 'mandatory' : 'optional' }}"></salla-scopes>
 {% endif %}
 {% block scripts %}{% endblock %}
 </body>

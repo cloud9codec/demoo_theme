@@ -1,0 +1,113 @@
+{#
+| Variable                    | Type    | Description                |
+|-----------------------------|---------|-----------------------------|
+| component.announcement_text | string  | نص الإعلان                  |
+| component.bg_color          | string  | لون خلفية شريط الإعلانات    |
+| component.text_color        | string  | لون نص شريط الإعلانات       |
+| component.enable_close      | boolean | زر الإغلاق                  |
+#}
+
+{% if component.announcement_text %}
+<div class="announcement-bar" id="announcementBar" style="background-color: {{ component.bg_color | default('#004956') }}; color: {{ component.text_color | default('#ffffff') }};">
+    <div class="announcement-bar__wrapper">
+        <div class="announcement-bar__marquee">
+            <span class="announcement-bar__text">{{ component.announcement_text }}</span>
+            <span class="announcement-bar__text">{{ component.announcement_text }}</span>
+            <span class="announcement-bar__text">{{ component.announcement_text }}</span>
+            <span class="announcement-bar__text">{{ component.announcement_text }}</span>
+        </div>
+    </div>
+    
+    {% if component.enable_close %}
+        <button class="announcement-bar__close" onclick="closeAnnouncement()" aria-label="إغلاق" style="color: {{ component.text_color | default('#ffffff') }};">
+            <i class="sicon-cancel"></i>
+        </button>
+    {% endif %}
+</div>
+
+<style>
+.announcement-bar {
+    width: 100%;
+    padding: 8px 0;
+   position: absolute;
+    z-index: 105;
+    overflow: hidden;
+    display: block;
+    order: -1;
+}
+
+.announcement-bar__wrapper {
+    overflow: hidden;
+    width: 100%;
+}
+
+.announcement-bar__marquee {
+    display: flex;
+    gap: 50px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+}
+
+.announcement-bar__text {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 25px;
+}
+
+.announcement-bar__close {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.announcement-bar__close:hover {
+    opacity: 1;
+}
+
+.announcement-bar__close i {
+    font-size: 16px;
+}
+
+.announcement-bar.is-hidden {
+    display: none;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .announcement-bar__text {
+        font-size: 12px;
+    }
+}
+</style>
+
+<script>
+function closeAnnouncement() {
+    const bar = document.getElementById('announcementBar');
+    bar.classList.add('is-hidden');
+    sessionStorage.setItem('announcementClosed', 'true');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const bar = document.getElementById('announcementBar');
+    if (bar && sessionStorage.getItem('announcementClosed') === 'true') {
+        bar.classList.add('is-hidden');
+    }
+});
+</script>
+{% endif %}

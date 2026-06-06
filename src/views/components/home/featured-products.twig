@@ -1,0 +1,295 @@
+<section class="featured-products-cinema">
+  <div class="featured-grid">
+    {# نحسب رابط عرض الكل مرة واحدة #}
+    {% set more_products = component.more_category | default([]) %}
+    {% set view_all_url = '#' %}
+    {% if more_products is not empty %}
+      {% set first_product_id = more_products[0] %}
+      {% set view_all_url = product.link(first_product_id) %}
+    {% endif %}
+    {# ===== البنر الجانبي ===== #}
+    <div class="featured-banner" style="background-color: {{ component.banner_bg | default('#004956') }};">
+      {% if component.video_url %}
+        <video autoplay muted loop playsinline class="featured-video">
+          <source src="{{ component.video_url }}" type="video/mp4"></video>
+        {% else %}
+          <div class="featured-video-placeholder"></div>
+        {% endif %}
+        <div class="featured-overlay"></div>
+        <div class="featured-banner-content">
+          {% if component.banner_title %}
+            <h2 style="color: {{ component.title_color }}">
+              {{ component.banner_title }}
+            </h2>
+          {% endif %}
+          {% if component.button_text %}
+            <a href="{{ view_all_url }}" class="featured-btn" style="background: {{ component.button_color }};">
+              <span>
+                {{ component.button_text }}
+              </span>
+              <span class="btn-arrow">
+                ›
+              </span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      {# ===== سلايدر المنتجات ===== #}
+      <div class="featured-products-side">
+        {% set categories = component.product_source | default([]) %}
+        {% if categories is empty %}
+          <salla-products-slider source="latest" limit="{{ component.product_limit | default(6) }}" show-controls show-pagination></salla-products-slider>
+        {% else %}
+          <salla-products-slider source="categories" source-value="{{ categories }}" limit="{{ component.product_limit | default(6) }}" show-controls show-pagination></salla-products-slider>
+        {% endif %}
+        <div class="featured-view-all-wrapper">
+          <a href="{{ view_all_url }}" class="featured-view-all-btn">
+            عرض الكل
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+
+/* ==============================
+   التخطيط العام
+============================== */
+
+.featured-products-cinema {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 32% 68%;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* ==============================
+   البنر الجانبي
+============================== */
+
+.featured-banner {
+  position: relative;
+  width: 90%;
+  min-height: 65%;
+  max-height: 80%;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.featured-video,
+.featured-video-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #000, #444);
+}
+
+.featured-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+}
+
+.featured-banner-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+  color: #fff;
+}
+
+.featured-banner-content h2 {
+  margin-bottom: 15px;  /* زادنا المسافة تحت العنوان */
+}
+
+
+.featured-btn {
+  padding: 12px 30px;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: .3s;
+}
+
+.featured-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.featured-btn:hover .btn-arrow {
+  transform: translateX(6px);
+}
+
+/* ==============================
+   منطقة المنتجات
+============================== */
+
+.featured-products-side {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 105px;
+}
+
+/* ✅ بطاقة المنتج مثل النموذج */
+
+.featured-products-side salla-products-slider::part(card) {
+  background: #fff;
+  border: 2px solid #1c6b8f;
+  border-radius: 18px;
+  padding: 12px;
+  transition: .35s ease;
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+}
+
+.featured-products-side salla-products-slider::part(card):hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.15);
+}
+
+/* ✅ صورة المنتج */
+
+.featured-products-side salla-products-slider::part(image) {
+  border-radius: 14px;
+  background: #f5f5f5;
+  padding: 10px;
+  position: relative;
+}
+
+/* ✅ شارة متوفر */
+
+.featured-products-side salla-products-slider::part(image)::before {
+  content: "متوفر ✓";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #e9f9ee;
+  color: #1fa84f;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid #b5e5c8;
+}
+
+/* ✅ اسم المنتج */
+
+.featured-products-side salla-products-slider::part(title) {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* ✅ السعر */
+
+.featured-products-side salla-products-slider::part(price) {
+  text-align: center;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ✅ زر الإضافة للسلة */
+
+.featured-products-side salla-products-slider::part(add-to-cart) {
+  width: calc(100% - 24px);
+  margin: 12px auto 0 auto;
+  border-radius: 24px;
+  border: 1px solid #1fa9a4;
+  color: #1fa9a4;
+  background: transparent;
+  font-weight: bold;
+  transition: .25s;
+}
+
+.featured-products-side salla-products-slider::part(add-to-cart):hover {
+  background: #1fa9a4;
+  color: #fff;
+}
+
+/* ==============================
+   الأسهم تحت السلايدر
+============================== */
+
+.featured-products-side salla-products-slider::part(nav) {
+  position: absolute;
+  bottom: -75px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+}
+
+.featured-products-side salla-products-slider::part(prev),
+.featured-products-side salla-products-slider::part(next) {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #fff;
+  border: 2px solid #1c6b8f;
+  color: #1c6b8f;
+  transition: .3s;
+}
+
+.featured-products-side salla-products-slider::part(prev):hover,
+.featured-products-side salla-products-slider::part(next):hover {
+  background: #1c6b8f;
+  color: #fff;
+}
+
+/* ==============================
+   زر عرض الكل
+============================== */
+
+.featured-view-all-wrapper {
+  position: absolute;
+  bottom: -75px;
+  right: 20px;
+  z-index: 12;
+}
+
+.featured-view-all-btn {
+  background: #fff;
+  border: 2px solid #1c6b8f;
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #1c6b8;
+  text-decoration: none;
+  transition: .3s;
+}
+
+.featured-view-all-btn:hover {
+  background: #1c6b8f;
+  color: #fff;
+}
+
+/* ==============================
+   الجوال
+============================== */
+
+@media (max-width: 992px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+  
