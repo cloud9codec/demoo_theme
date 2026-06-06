@@ -1,0 +1,396 @@
+<section class="promo-banner-wrapper">
+    {% if component.collection and component.collection|length > 0 %}
+        {% for item in component.collection %}
+            <div class="promo-banner">
+                <div class="banner-container" {% if item.promo_image %} style="background-image: url('{{ item.promo_image }}'); {% if item.banner_color %}background-color: {{ item.banner_color }};{% endif %}" {% endif %}>
+                    
+                    {# طبقة التعتيم #}
+                    <div class="banner-overlay"></div>
+
+                    {# محتوى البنر فوق الصورة #}
+                    <div class="banner-content">
+                        {# العنوان الرئيسي #}
+                        {% if item.title %}
+                            <h2 class="banner-title" 
+                                style="color: {{ item.title_color | default(item.text_color | default('#004956')) }};">
+                                {{ item.title }}
+                            </h2>
+                        {% endif %}
+                        
+                        {# الوصف الفرعي #}
+                        {% if item.subtitle %}
+                            <p class="banner-description" 
+                               style="color: {{ item.subtitle_color | default(item.text_color | default('#666666')) }};">
+                                {{ item.subtitle }}
+                            </p>
+                        {% endif %}
+
+                        {# زر البنر #}
+                        {% if item.button_text and item.dropdown_list and item.dropdown_list|length > 0 %}
+                            {% set first_category = item.dropdown_list[0] %}
+                            <a href="{{ first_category.url | default('#') }}" 
+                               class="banner-cta-button" 
+                               style="background: {{ item.button_color | default('#004956') }}; 
+                                       color: {{ item.button_text_color | default('#ffffff') }};">
+                                <span>{{ item.button_text }}</span>
+                                <svg class="button-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</section>
+
+<style>
+.promo-banner-wrapper {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.promo-banner {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.banner-container {
+    width: 100%;
+    height: 320px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* طبقة التعتيم */
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.banner-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.banner-title {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    animation: slideDown 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.banner-description {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0 0 20px 0;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    animation: slideUp 0.8s ease-out 0.4s forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.banner-cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    background: #004956;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.8s ease-out 0.6s forwards;
+    opacity: 0;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.banner-cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.banner-cta-button:hover::before {
+    left: 100%;
+}
+
+.banner-cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.button-arrow {
+    transition: transform 0.3s ease;
+}
+
+.banner-cta-button:hover .button-arrow {
+    transform: translateX(4px);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .banner-container {
+        height: 300px;
+    }
+
+    .banner-title {
+        font-size: 26px;
+    }
+
+    .banner-description {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-container {
+        height: 250px;
+        border-radius: 15px;
+    }
+
+    .banner-content {
+        width: 95%;
+    }
+
+    .banner-title {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+    }
+
+    .banner-description {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .banner-cta-button {
+        padding: 11px 25px;
+        font-size: 14px;
+    }
+
+    .banner-overlay {
+        background: rgba(0, 0, 0, 0.4);
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-container {
+        height: 200px;
+        border-radius: 12px;
+    }
+
+    .banner-content {
+        width: 90%;
+    }
+
+    .banner-title {
+        font-size: 1.4rem;
+        margin-bottom: 6px;
+    }
+
+    .banner-description {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+
+    .banner-cta-button {
+        padding: 10px 20px;
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    .button-arrow {
+        width: 18px;
+        height: 18px;
+    }
+
+    .banner-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Dark Mode */
+body.dark-mode .banner-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+
+/* =================================================
+   MOBILE ONLY – Promo Banner تحسين للجوال فقط
+   ================================================= */
+@media (max-width: 768px) {
+
+  .promo-banner-wrapper {
+    margin: 10px 0;
+  }
+
+  .promo-banner {
+    margin-bottom: 15px;
+  }
+
+  .banner-container {
+    height: 220px;               /* تقليل الارتفاع */
+    border-radius: 14px;
+    background-position: center;
+  }
+
+  .banner-content {
+    width: 92%;
+    padding: 0 10px;
+  }
+
+  .banner-title {
+    font-size: 1.4rem;           /* عنوان مناسب للجوال */
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+
+  .banner-description {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+
+  .banner-cta-button {
+    padding: 10px 22px;
+    font-size: 14px;
+    border-radius: 999px;
+  }
+
+  .button-arrow {
+    width: 18px;
+    height: 18px;
+  }
+
+  .banner-overlay {
+    background: rgba(0, 0, 0, 0.45); /* تباين أفضل للنص */
+  }
+}
+
+/* موبايل صغير جداً */
+@media (max-width: 480px) {
+
+  .banner-container {
+    height: 190px;
+    border-radius: 12px;
+  }
+
+  .banner-title {
+    font-size: 1.25rem;
+  }
+
+  .banner-description {
+    font-size: 0.85rem;
+  }
+
+  .banner-cta-button {
+    padding: 9px 18px;
+    font-size: 13px;
+    gap: 6px;
+  }
+}
+
+</style>
+
+<script>
+// Animation on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const banners = document.querySelectorAll('.banner-content');
+    
+    if (!banners.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    banners.forEach(banner => observer.observe(banner));
+});
+</script>

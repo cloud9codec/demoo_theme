@@ -1,0 +1,439 @@
+<div class="cinema-banner">
+  <div class="cinema-slider">
+    {# ===== السلايدات الثلاثة ===== #}
+    {% set banners = [component.url1, component.url2, component.url3] %}
+    
+    {% for banner in banners %}
+      {% if banner %}
+        {% set banner_url = banner %}
+        {% if banner_url starts with '//' %}
+          {% set banner_url = 'https:' ~ banner_url %}
+        {% endif %}
+        
+        <div class="cinema-slide {% if loop.first %}active{% endif %}">
+          {% if '.mp4' in banner_url or '.webm' in banner_url %}
+            <video class="animated-banner-img" autoplay muted loop playsinline>
+              <source src="{{ banner_url }}" type="video/mp4">
+            </video>
+          {% else %}
+            <img src="{{ banner_url }}" class="animated-banner-img" loading="{% if loop.first %}eager{% else %}lazy{% endif %}"/>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {# ===== المحتوى النصي ===== #}
+  <div class="cinema-banner-content">
+    {% if component.banner_title %}
+      <h1 style="color: {{ component.title_color }}">
+        {{ component.banner_title }}
+      </h1>
+    {% endif %}
+
+    {% if component.banner_subtitle %}
+      <p style="color: {{ component.subtitle_color }}">
+        {{ component.banner_subtitle }}
+      </p>
+    {% endif %}
+
+    {% if component.button_text %}
+      <a href="{{ component.url1 | default('#') }}"
+         class="cinema-banner-btn"
+         id="cinemaBannerBtn"
+         style="
+           background-color: {{ component.button_color }};
+           color: {{ component.buttontext_color }};
+         ">
+        <span class="btn-text">{{ component.button_text }}</span>
+        <span class="btn-arrow">›</span>
+      </a>
+    {% endif %}
+  </div>
+
+  {# ===== نقاط التنقل ===== #}
+  <div class="cinema-dots">
+    {% set banners = [component.url1, component.url2, component.url3] %}
+    {% set dot_index = 0 %}
+    {% for banner in banners %}
+      {% if banner %}
+        <button class="cinema-dot {% if loop.first %}active{% endif %}" 
+                data-index="{{ dot_index }}"
+                data-url="{{ banner }}"
+                aria-label="انتقل للسلايد {{ dot_index + 1 }}">
+        </button>
+        {% set dot_index = dot_index + 1 %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.cinema-banner {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    max-height: 1100px;
+    overflow: hidden;
+    margin-top: 1px;
+}
+
+/* ===== السلايدر ===== */
+.cinema-slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cinema-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    z-index: 0;
+}
+
+.cinema-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.cinema-banner .animated-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+/* ===== المحتوى في المنتصف ===== */
+.cinema-banner-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5vw;
+    background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.45),
+        rgba(0,0,0,0.25),
+        rgba(0,0,0,0.45)
+    );
+}
+
+.cinema-banner-content h1 {
+    font-size: clamp(22px, 2.5vw, 38px);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.cinema-banner-content p {
+    font-size: clamp(20px, 2.5vw, 30px);
+    margin-bottom: 20px;
+    max-width: 800px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+
+/* ===== زر مع سهم + تأثير اللمعة ===== */
+.cinema-banner-btn {
+    padding: 12px 28px 12px 32px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cinema-banner-btn .btn-arrow {
+    font-size: 20px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.cinema-banner-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.1);
+}
+
+.cinema-banner-btn:hover .btn-arrow {
+    transform: translateX(-6px);
+}
+
+.cinema-banner-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        -90deg,
+        transparent,
+        rgba(255,255,255,0.35),
+        transparent
+    );
+    transition: right 0.5s ease;
+    z-index: 0;
+}
+
+.cinema-banner-btn:hover::before {
+    right: 100%;
+}
+
+.cinema-banner-btn span,
+.cinema-banner-btn .btn-arrow {
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== نقاط التنقل ===== */
+.cinema-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    gap: 10px;
+    direction: ltr;
+}
+
+.cinema-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.cinema-dot:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.cinema-dot.active {
+    width: 35px;
+    background-color: {{ component.button_color | default('#004956') }};
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+    .cinema-banner {
+        height: 70vh;
+        min-height: 400px;
+        margin-top: -100px;
+    }
+
+    .cinema-banner-content {
+        padding: 30px;
+    }
+
+    .cinema-dots {
+        bottom: 20px;
+    }
+
+    .cinema-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .cinema-dot.active {
+        width: 28px;
+    }
+}
+
+/* ==============================
+   Mobile – Featured Products Cinema
+============================== */
+
+@media (max-width: 768px) {
+
+  .featured-products-cinema {
+    padding: 20px 0;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* البنر */
+  .featured-banner {
+    min-height: 260px;
+    max-height: 320px;
+    border-radius: 18px;
+  }
+
+  .featured-banner-content {
+    padding: 20px;
+  }
+
+  .featured-banner-content h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .featured-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+
+  /* المنتجات */
+  .featured-products-side {
+    padding-bottom: 80px;
+  }
+
+  /* الأسهم */
+  .featured-products-side
+  salla-products-slider::part(nav) {
+    bottom: -55px;
+  }
+
+  /* زر عرض الكل */
+  .featured-view-all-wrapper {
+    bottom: -55px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .featured-view-all-btn {
+    font-size: 12px;
+    padding: 6px 16px;
+  }
+}
+
+/* ==============================
+   Mobile – Cinema Banner
+============================== */
+
+@media (max-width: 768px) {
+
+  .cinema-banner {
+    height: 70vh;
+    min-height: 380px;
+    max-height: 520px;
+    margin-top: 0;
+  }
+
+  .cinema-banner-content {
+    padding: 24px 18px;
+  }
+
+  .cinema-banner-content h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .cinema-banner-content p {
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+  }
+
+  .cinema-banner-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+
+  /* النقاط */
+  .cinema-dots {
+    bottom: 16px;
+    gap: 8px;
+  }
+
+  .cinema-dot {
+    width: 9px;
+    height: 9px;
+  }
+
+  .cinema-dot.active {
+    width: 24px;
+  }
+}
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.cinema-slide');
+    const dots = document.querySelectorAll('.cinema-dot');
+    const bannerBtn = document.getElementById('cinemaBannerBtn');
+    
+    if (slides.length === 0) return;
+    
+    let currentIndex = 0;
+    let autoSlideInterval;
+    const autoSlideDelay = 5000; // 5 ثواني
+    
+    // تجميع روابط البنرات
+    const bannerUrls = [];
+    dots.forEach(dot => {
+        bannerUrls.push(dot.dataset.url);
+    });
+    
+    function goToSlide(index) {
+        // إزالة active من الكل
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // تفعيل السلايد الجديد
+        currentIndex = index;
+        slides[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+        
+        // تحديث رابط الزر
+        if (bannerBtn && bannerUrls[currentIndex]) {
+            bannerBtn.href = bannerUrls[currentIndex];
+        }
+    }
+    
+    function nextSlide() {
+        let next = currentIndex + 1;
+        if (next >= slides.length) next = 0;
+        goToSlide(next);
+    }
+    
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, autoSlideDelay);
+    }
+    
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+    
+    // النقر على النقاط
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            goToSlide(index);
+            resetAutoSlide();
+        });
+    });
+    
+    // بدء التشغيل التلقائي
+    if (slides.length > 1) {
+        startAutoSlide();
+    }
+    
+    // إيقاف مؤقت عند hover
+    const banner = document.querySelector('.cinema-banner');
+    banner.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+    banner.addEventListener('mouseleave', startAutoSlide);
+});
+</script>
