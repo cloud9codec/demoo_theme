@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {# 
   العداد التنازلي - Countdown Timer Component
   ============================================
@@ -461,3 +462,468 @@
 }
 
 </style>
+=======
+{# 
+  العداد التنازلي - Countdown Timer Component
+  ============================================
+  المتغيرات المتاحة:
+  - component.countdown_timer: التاريخ والوقت (required)
+  - component.countdown_color: لون الخلفية (optional)
+  - component.countdown_text: النص العلوي (optional)
+  - component.countdown_text1: النص السفلي (optional)
+#}
+
+<section class="cd-section" 
+  data-deadline="{{ component.countdown_timer }}" 
+  data-color="{{ component.countdown_color|default('#004956') }}">
+  
+  <div class="cd-wrap">
+    
+    {# النص العلوي #}
+    {% if component.countdown_text %}
+      <span class="cd-label cd-label--top">
+        {{ component.countdown_text }}
+      </span>
+    {% endif %}
+    
+    {# صناديق العداد #}
+    <div class="cd-cells">
+      <div class="cd-box">
+        <span class="cd-value" data-unit="days">0</span>
+        <small class="cd-unit">يوم</small>
+      </div>
+      <div class="cd-box">
+        <span class="cd-value" data-unit="hours">00</span>
+        <small class="cd-unit">ساعة</small>
+      </div>
+      <div class="cd-box">
+        <span class="cd-value" data-unit="minutes">00</span>
+        <small class="cd-unit">دقيقة</small>
+      </div>
+      <div class="cd-box">
+        <span class="cd-value" data-unit="seconds">00</span>
+        <small class="cd-unit">ثانية</small>
+      </div>
+    </div>
+    
+    {# النص السفلي #}
+    {% if component.countdown_text1 %}
+      <span class="cd-label cd-label--bottom">
+        {{ component.countdown_text1 }}
+      </span>
+    {% endif %}
+    
+    {# رسالة الانتهاء #}
+    <div class="cd-expired" style="display: none;">
+      <div class="cd-expired__icon">⏰</div>
+      <h3 class="cd-expired__title">انتهى العرض!</h3>
+      <p class="cd-expired__text">ترقبوا عروضنا القادمة</p>
+    </div>
+    
+  </div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+  
+  document.addEventListener("DOMContentLoaded", function() {
+    const section = document.querySelector(".cd-section");
+    if (!section) return;
+    
+    // الحصول على البيانات من attributes
+    const deadlineStr = section.getAttribute("data-deadline");
+    const customColor = section.getAttribute("data-color");
+    
+    // عناصر DOM
+    const cells = section.querySelector(".cd-cells");
+    const expiredMessage = section.querySelector(".cd-expired");
+    const labels = section.querySelectorAll(".cd-label");
+    const cdWrap = section.querySelector(".cd-wrap");
+    const valueElements = {
+      days: section.querySelector('[data-unit="days"]'),
+      hours: section.querySelector('[data-unit="hours"]'),
+      minutes: section.querySelector('[data-unit="minutes"]'),
+      seconds: section.querySelector('[data-unit="seconds"]')
+    };
+    
+    // التحقق من وجود التاريخ
+    if (!deadlineStr) {
+      console.warn("⚠️ CountdownTimer: لم يتم تحديد تاريخ الانتهاء");
+      return;
+    }
+    
+    // تحويل التاريخ
+    const deadline = new Date(deadlineStr).getTime();
+    if (isNaN(deadline)) {
+      console.error("❌ CountdownTimer: صيغة التاريخ غير صحيحة");
+      return;
+    }
+    
+    // تطبيق اللون المخصص
+    if (customColor) {
+      applyCustomColor(customColor, cdWrap, Object.values(valueElements));
+    }
+    
+    // تحديث العداد كل ثانية
+    const updateInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // التحديث الأول مباشرة
+    
+    function updateTimer() {
+      const now = new Date().getTime();
+      const diff = deadline - now;
+      
+      if (diff <= 0) {
+        // انتهاء العد التنازلي
+        clearInterval(updateInterval);
+        showExpiredMessage();
+        return;
+      }
+      
+      // حساب الوقت المتبقي
+      const timeUnits = calculateTimeUnits(diff);
+      
+      // تحديث الأرقام
+      valueElements.days.textContent = timeUnits.days;
+      valueElements.hours.textContent = String(timeUnits.hours).padStart(2, '0');
+      valueElements.minutes.textContent = String(timeUnits.minutes).padStart(2, '0');
+      valueElements.seconds.textContent = String(timeUnits.seconds).padStart(2, '0');
+    }
+    
+    function calculateTimeUnits(diff) {
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000)
+      };
+    }
+    
+    function showExpiredMessage() {
+      cells.style.display = "none";
+      labels.forEach(label => label.style.display = "none");
+      expiredMessage.style.display = "block";
+      cdWrap.style.background = "linear-gradient(135deg, #FFD93D 0%, #FFA726 100%)";
+    }
+    
+    function applyCustomColor(color, wrap, spanElements) {
+      const darkColor = adjustColor(color, -20);
+      wrap.style.background = `linear-gradient(135deg, ${color} 0%, ${darkColor} 100%)`;
+      
+      spanElements.forEach(span => {
+        if (span && span.classList.contains('cd-value')) {
+          span.style.color = color;
+        }
+      });
+    }
+    
+    function adjustColor(color, percent) {
+      const num = parseInt(color.replace("#", ""), 16);
+      const amt = Math.round(2.55 * percent);
+      
+      const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+      const G = Math.min(255, Math.max(0, (num >> 8 & 0x00FF) + amt));
+      const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt));
+      
+      return "#" + [R, G, B]
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('')
+        .toUpperCase();
+    }
+  });
+})();
+</script>
+
+<style>
+
+
+/* Container */
+.cd-wrap {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.5s ease;
+  margin-top: 50px;
+}
+
+/* Labels */
+.cd-label {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  display: block;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cd-label--top {
+  margin-bottom: 15px;
+}
+
+.cd-label--bottom {
+  margin-top: 15px;
+}
+
+/* Countdown Cells */
+.cd-cells {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.cd-box {
+  background: #ffffff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  min-width: 70px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cd-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cd-value {
+  font-size: 28px;
+  font-weight: bold;
+  display: block;
+  color: #667eea;
+  transition: color 0.3s ease;
+}
+
+.cd-unit {
+  font-size: 12px;
+  opacity: 0.7;
+  color: #666;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Expired Message */
+.cd-expired {
+  animation: fadeIn 0.5s ease;
+  color: #fff;
+  padding: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cd-expired__icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+  animation: bounce 1s infinite;
+  display: block;
+}
+
+.cd-expired__title {
+  font-size: 28px;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #fff;
+}
+
+.cd-expired__text {
+  font-size: 16px;
+  margin: 10px 0;
+  opacity: 0.95;
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cd-wrap {
+    padding: 15px;
+  }
+
+  .cd-cells {
+    gap: 10px;
+  }
+
+  .cd-box {
+    padding: 12px 15px;
+    min-width: 60px;
+  }
+
+  .cd-value {
+    font-size: 22px;
+  }
+
+  .cd-label {
+    font-size: 16px;
+  }
+
+  .cd-expired__icon {
+    font-size: 50px;
+  }
+
+  .cd-expired__title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cd-wrap {
+    padding: 12px;
+    margin-top: 30px;
+  }
+
+  .cd-cells {
+    gap: 8px;
+    margin: 15px 0;
+  }
+
+  .cd-box {
+    padding: 10px 12px;
+    min-width: 50px;
+  }
+
+  .cd-value {
+    font-size: 18px;
+  }
+
+  .cd-unit {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+
+  .cd-label {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .cd-expired__icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+  }
+
+  .cd-expired__title {
+    font-size: 20px;
+    margin: 8px 0;
+  }
+
+  .cd-expired__text {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+}
+
+/* ==============================
+   📱 Mobile & Tablet Responsive
+   (Reusable Pattern)
+============================== */
+
+/* ===== Tablet ===== */
+@media (max-width: 992px) {
+
+  /* تحويل أي Grid إلى عمودي */
+  .featured-grid,
+  .my-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  /* تصغير البنرات */
+  .featured-banner,
+  .cinema-banner,
+  .my-banner {
+    min-height: 360px;
+    max-height: 420px;
+  }
+
+  /* تخفيف البادينق */
+  .featured-banner-content,
+  .cinema-banner-content,
+  .my-content {
+    padding: 20px;
+  }
+
+  /* تصغير العناوين */
+  .featured-banner-content h2,
+  .cinema-banner-content h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  /* الأزرار */
+  .featured-btn,
+  .cinema-banner-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+
+/* ===== Mobile ===== */
+@media (max-width: 576px) {
+
+  /* البنر أصغر */
+  .featured-banner,
+  .cinema-banner,
+  .my-banner {
+    min-height: 280px;
+    max-height: 320px;
+  }
+
+  /* المحتوى بالمنتصف */
+  .featured-banner-content,
+  .cinema-banner-content {
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* العناوين */
+  .featured-banner-content h2,
+  .cinema-banner-content h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* النصوص الثانوية */
+  .cinema-banner-content p {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  /* الأزرار */
+  .featured-btn,
+  .cinema-banner-btn {
+    padding: 9px 20px;
+    font-size: 13px;
+  }
+
+  /* السلايدرات */
+  salla-products-slider {
+    --card-radius: 14px;
+  }
+
+  /* إخفاء عناصر غير ضرورية */
+  .featured-view-all-wrapper {
+    display: none;
+  }
+}
+
+</style>
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% if component.enable %}
   <div id="smartPromoPopup" class="smart-promo-popup" style="
       --popup-bg: {{ component.bg_color | default('#1a1a2e') }};
@@ -234,4 +235,242 @@
   });
 </script>
   {% endif %}
+=======
+{% if component.enable %}
+  <div id="smartPromoPopup" class="smart-promo-popup" style="
+      --popup-bg: {{ component.bg_color | default('#1a1a2e') }};
+      --popup-text: {{ component.text_color | default('#f8e5d2') }};
+      display:block;
+    ">
+    <button class="promo-close" onclick="closeSmartPromo()">
+      ×
+    </button>
+    <div class="promo-content">
+      {% if component.promo_text %}
+        <p class="promo-text">
+          {{ component.promo_text | raw }}
+        </p>
+      {% endif %}
+      {% if component.coupon_code %}
+        <div class="promo-coupon">
+          <input type="text" value="{{ component.coupon_code }}" readonly id="promoCouponCode">
+            <button class="promo-copy-btn" onclick="copyPromoCoupon()">
+              نسخ
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <style>
+
+  #smartPromoPopup {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+
+#smartPromoPopup.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.smart-promo-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  padding: 50px 40px 40px;
+  border-radius: 16px;
+  z-index: 9999;
+  background: var(--popup-bg);
+  border: 1px solid #c9a86c;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+}
+
+/* ✅ النجمة الذهبية - بدون خلفية */
+.smart-promo-popup::before {
+  content: '✦';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 26px;
+  color: #c9a86c;
+}
+
+/* ✅ الخط الذهبي الأنيق تحت النجمة */
+.smart-promo-popup::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a86c, transparent);
+}
+
+/* ✅ زر الإغلاق */
+.smart-promo-popup .promo-close {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--popup-text);
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.smart-promo-popup .promo-close:hover {
+  opacity: 1;
+}
+
+/* ✅ النص */
+.promo-text {
+  text-align: center;
+  line-height: 2;
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--popup-text);
+}
+
+/* ✅ قسم الكوبون */
+.promo-coupon {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+/* ✅ حقل الكوبون */
+.promo-coupon input {
+  width: 220px;
+  padding: 15px 25px;
+  text-align: center;
+  border-radius: 8px;
+  border: 2px dashed #c9a86c;
+  background: transparent;
+  color: var(--popup-text);
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 4px;
+}
+
+/* ✅ زر النسخ */
+.promo-copy-btn {
+  padding: 12px 40px;
+  border-radius: 25px;
+  border: none;
+  background: #c9a86c;
+  color: var(--popup-bg);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.promo-copy-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* ✅ للجوال */
+@media (max-width: 768px) {
+  .smart-promo-popup {
+    width: 85%;
+    max-width: 320px;
+    padding: 35px 20px 25px;
+  }
+  
+  .promo-text {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  
+  .promo-coupon input {
+    width: 160px;
+    font-size: 16px;
+    padding: 12px 20px;
+    letter-spacing: 3px;
+  }
+  
+  .promo-copy-btn {
+    padding: 10px 35px;
+    font-size: 14px;
+  }
+  
+  .smart-promo-popup::before {
+    font-size: 22px;
+    top: -12px;
+  }
+}
+
+/* ✅ للشاشات الصغيرة جداً */
+@media (max-width: 380px) {
+  .smart-promo-popup {
+    width: 90%;
+    max-width: 280px;
+    padding: 30px 15px 20px;
+  }
+  
+  .promo-text {
+    font-size: 14px;
+  }
+  
+  .promo-coupon input {
+    width: 140px;
+    font-size: 14px;
+  }
+}
+</style>
+    <script>
+  const storageKey = 'smartPromoShown';
+  let promoShown = false;
+  let promoClosed = false;
+
+  function openSmartPromo() {
+    const popup = document.getElementById('smartPromoPopup');
+    if (popup && !promoClosed) {
+      popup.classList.add("active");
+      promoShown = true;
+    }
+  }
+
+  function closeSmartPromo() {
+    const popup = document.getElementById('smartPromoPopup');
+    if (popup) {
+      popup.classList.remove("active");
+      promoClosed = true;
+      localStorage.setItem(storageKey, 'true');
+    }
+  }
+
+  function copyPromoCoupon() {
+    const input = document.getElementById('promoCouponCode');
+    if (input) {
+      input.select();
+      document.execCommand('copy');
+
+      const btn = document.querySelector('.promo-copy-btn');
+      const originalText = btn.textContent;
+      btn.textContent = 'تم النسخ ✓';
+      setTimeout(() => btn.textContent = originalText, 2000);
+    }
+  }
+
+  // ✅ تظهر عند السكرول مرة وحدة فقط
+  window.addEventListener('scroll', function() {
+   
+ if (window.scrollY > 50) {
+      openSmartPromo();
+    }
+  });
+</script>
+  {% endif %}
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
   

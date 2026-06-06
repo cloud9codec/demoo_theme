@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {#
 | Variable                         | Type    | Description           |
 |----------------------------------|---------|-----------------------|
@@ -88,4 +89,96 @@
   }
 }
 
+=======
+{#
+| Variable                         | Type    | Description           |
+|----------------------------------|---------|-----------------------|
+| component.main_title             | string  | العنوان الرئيسي        |
+| component.sub_title              | string  | العنوان الفرعي         |
+| component.line_color             | string  | لون الفاصل            |
+#}
+
+<div class="elegant-divider">
+    {% if component.main_title %}
+        <h2 class="elegant-divider__title">{{ component.main_title }}</h2>
+    {% endif %}
+    
+    {% if component.sub_title %}
+        <p class="elegant-divider__subtitle">{{ component.sub_title }}</p>
+    {% endif %}
+    
+    <div class="elegant-divider__line">
+        <span class="elegant-divider__bar"></span>
+        <span class="elegant-divider__diamond"></span>
+        <span class="elegant-divider__bar"></span>
+    </div>
+</div>
+
+<style>
+.elegant-divider {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.elegant-divider__title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 12px;
+}
+
+.elegant-divider__subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.elegant-divider__line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.elegant-divider__bar {
+    width: 200px;
+    height: 2px;
+    background: {{ component.line_color | default('#004956') }};
+}
+
+.elegant-divider__diamond {
+    width: 10px;
+    height: 10px;
+    background: {{ component.line_color | default('#004956') }};
+    transform: rotate(45deg);
+}
+
+@media (max-width: 768px) {
+  .elegant-divider {
+    padding: 30px 16px;
+  }
+
+  .elegant-divider__title {
+    font-size: 22px;
+  }
+
+  .elegant-divider__subtitle {
+    font-size: 14px;
+  }
+
+  .elegant-divider__bar {
+    width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .elegant-divider__bar {
+    width: 80px;
+  }
+}
+
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
 </style>

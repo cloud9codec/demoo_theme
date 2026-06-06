@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {#
 | Variable              | Type   | Description                |
 |-----------------------|--------|----------------------------|
@@ -96,4 +97,104 @@
     padding-right: 15px;
   }
 }
+=======
+{#
+| Variable              | Type   | Description                |
+|-----------------------|--------|----------------------------|
+| component.bartext1    | string | نص شريط الإعلانات رقم 1    |
+| component.bartext2    | string | نص شريط الإعلانات رقم 2    |
+| component.bartext3    | string | نص شريط الإعلانات رقم 3    |
+| component.barcolor    | string | لون خلفية شريط الإعلانات    |
+| component.textcolor   | string | لون نص شريط الإعلانات       |
+#}
+
+{% set barcolor  = component.barcolor  | default('#004956') %}
+{% set textcolor = component.textcolor | default('#ffffff') %}
+
+{# نجمع النصوص المتوفرة #}
+{% set texts = [] %}
+{% if component.bartext1 %}{% set texts = texts | merge([component.bartext1]) %}{% endif %}
+{% if component.bartext2 %}{% set texts = texts | merge([component.bartext2]) %}{% endif %}
+{% if component.bartext3 %}{% set texts = texts | merge([component.bartext3]) %}{% endif %}
+
+{# fallback لو ما فيه نصوص #}
+{% if texts|length == 0 %}
+  {% set texts = ['🎉 مرحباً بكم في متجرنا!'] %}
+{% endif %}
+
+{# 
+  نبني تسلسل Base يتكرر داخلياً
+  (هذا يساعد على ملء السطر خصوصاً لو عندك 1-3 نصوص فقط)
+#}
+{% set base = [] %}
+{% for i in 1..6 %}
+  {% set base = base | merge(texts) %}
+{% endfor %}
+
+<div class="animated-bar" style="background-color: {{ barcolor }}; color: {{ textcolor }};">
+  <div class="animated-bar__wrapper">
+    <div class="animated-bar__marquee">
+
+      {# ✅ النصف الأول #}
+      {% for t in base %}
+        <span class="animated-bar__text">{{ t }}</span>
+      {% endfor %}
+
+      {# ✅ النصف الثاني مطابق تماماً للنصف الأول #}
+      {% for t in base %}
+        <span class="animated-bar__text" aria-hidden="true">{{ t }}</span>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<style>
+.animated-bar {
+  width: 100%;
+  padding: 8px 0;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+}
+
+.animated-bar__wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.animated-bar__marquee {
+  display: flex;
+  gap: 0;
+  white-space: nowrap;
+  will-change: transform;
+  animation: animatedBarMarquee 15s linear infinite;
+}
+
+.animated-bar__text {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 30px;
+}
+
+.animated-bar__text::after {
+  content: '✦';
+  padding-right: 30px;
+}
+
+@keyframes animatedBarMarquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .animated-bar__text {
+    font-size: 12px;
+    padding: 0 15px;
+  }
+  .animated-bar__text::after {
+    padding-right: 15px;
+  }
+}
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
 </style>

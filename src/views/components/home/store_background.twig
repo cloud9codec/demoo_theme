@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% if component.enable %}
 
 <style>
@@ -22,4 +23,30 @@
   }
 
 </style>
+=======
+{% if component.enable %}
+
+<style>
+
+  body {
+    {% if component.bg_image and component.bg_color %}
+      background-image:
+        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+        url('{{ component.bg_image }}');
+
+    {% elseif component.bg_image %}
+      background-image: url('{{ component.bg_image }}');
+
+    {% elseif component.bg_color %}
+      background-color: {{ component.bg_color }};
+    {% endif %}
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: {{ component.bg_fixed ? 'fixed' : 'scroll' }};
+  }
+
+</style>
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
 {% endif %}

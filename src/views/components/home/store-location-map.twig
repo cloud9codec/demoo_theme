@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <section class="store-location-map">
 
   <div class="store-location-map-card" style="background: {{ component.card_bg | default('#e2f0f3') }}; color: {{ component.text_color | default('#032c35') }}">
@@ -180,4 +181,188 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
 });
+=======
+<section class="store-location-map">
+
+  <div class="store-location-map-card" style="background: {{ component.card_bg | default('#e2f0f3') }}; color: {{ component.text_color | default('#032c35') }}">
+
+    <div class="store-location-map-info">
+      {% if component.map_title %}
+        <h3 class="store-location-map-title">
+          {{ component.map_title }}
+        </h3>
+      {% endif %}
+
+      {% if component.map_subtitle %}
+        <p class="store-location-map-subtitle">
+          {{ component.map_subtitle }}
+        </p>
+      {% endif %}
+
+      {% if component.address %}
+        <div class="store-location-map-address">
+          {{ component.address }}
+        </div>
+      {% endif %}
+    </div>
+
+    {# ===== الخريطة ===== #}
+<div class="store-location-map-frame">
+
+  {% set raw_map_url = component.button_url | default('https://maps.app.goo.gl/1yriEH4rxZWh5JkU9') %}
+
+  {# ✅ تحويل الرابط إلى صيغة embed تلقائيًا #}
+  {% set embed_map_url = 'https://www.google.com/maps?q=' ~ raw_map_url ~ '&output=embed' %}
+
+  <iframe
+    src="{{ embed_map_url }}"
+    loading="lazy"
+    allowfullscreen
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+
+</div>
+
+  </div>
+
+</section>
+
+{# ✅ زر الاتجاهات الذكي (جوال فقط) #}
+<a id="smartDirectionsBtn"
+   href="{{ map_url }}"
+   class="smart-directions-btn"
+   target="_blank">
+   🧭 احصل على الاتجاهات
+</a>
+
+<style>
+.store-location-map {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.store-location-map-card {
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+}
+
+.store-location-map-info {
+  padding: 32px;
+  text-align: right;
+  direction: rtl;
+}
+
+.store-location-map-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.store-location-map-subtitle {
+  font-size: 15px;
+  margin-bottom: 14px;
+  opacity: .9;
+}
+
+.store-location-map-address {
+  font-size: 14px;
+  opacity: .85;
+}
+
+.store-location-map-frame iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 0;
+}
+
+/* ✅ زر الاتجاهات الذكي */
+.smart-directions-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  z-index: 9999;
+}
+
+/* ✅ يظهر فقط في الجوال */
+@media (max-width: 768px) {
+  .store-location-map-card {
+    grid-template-columns: 1fr;
+  }
+
+  .smart-directions-btn {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .promo-banner-wrapper {
+    margin: 10px 0;
+  }
+
+  .banner-container {
+    height: 220px;
+    border-radius: 14px;
+  }
+
+  .banner-title {
+    font-size: 1.4rem;
+  }
+
+  .banner-description {
+    font-size: 0.95rem;
+  }
+
+  .banner-cta-button {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+
+}
+
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const btn = document.getElementById("smartDirectionsBtn");
+
+  if (!btn) return;
+
+  const storeMapUrl = btn.href;
+
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      const smartUrl = `https://www.google.com/maps/dir/${lat},${lng}/${encodeURIComponent(storeMapUrl)}`;
+
+      btn.href = smartUrl;
+    },
+    function () {
+      btn.href = storeMapUrl;
+    }
+  );
+
+});
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
 </script>

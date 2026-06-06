@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% if component.enable %}
 <style id="store-identity-style">
 
@@ -175,4 +176,183 @@
 
 
 </style>
+=======
+{% if component.enable %}
+<style id="store-identity-style">
+
+:root {
+  --store-header-bg: {{ component.header_bg | default('#bf6969') }};
+  --store-header-text: {{ component.header_text | default('#ffffff') }};
+  --smart-footer-bg: {{ component.footer_bg | default('#004956') }};
+  --smart-footer-text: {{ component.footer_text | default('#ffffff') }};
+  --smart-footer-border: {{ component.footer_text | default('#ffffff') }};
+  --smart-footer-muted: {{ component.footer_text | default('#ffffff') }};
+}
+
+/* =========================
+ ✅ الهيدر الأساسي (قبل السكرول)
+========================= */
+.store-header,
+.store-header .top-navbar,
+.store-header .main-nav-container,
+.store-header .main-nav-container .inner {
+ background-color: var(--store-header-bg) !important;
+}
+
+.store-header,
+.store-header a,
+.store-header button,
+.store-header i,
+.store-header span {
+  color: var(--store-header-text) !important;
+}
+
+/* =========================
+ ✅ الهيدر بعد السكرول
+========================= */
+.store-header.is-scrolled,
+.store-header.is-scrolled .top-navbar,
+.store-header.is-scrolled .main-nav-container,
+.store-header.is-scrolled .main-nav-container .inner {
+  background-color: var(--store-header-bg) !important;
+}
+
+
+
+.store-header.is-scrolled,
+.store-header.is-scrolled a,
+.store-header.is-scrolled button,
+.store-header.is-scrolled i,
+.store-header.is-scrolled span {
+  color: var(--store-header-text) !important;
+}
+
+/* =========================
+ ✅ الهيدر الشفاف
+========================= */
+.store-header.is-transparent,
+.store-header.is-transparent .top-navbar,
+.store-header.is-transparent .main-nav-container,
+.store-header.is-transparent .main-nav-container .inner {
+  background-color: var(--store-header-bg) !important;
+}
+
+.store-header.is-transparent,
+.store-header.is-transparent a,
+.store-header.is-transparent button,
+.store-header.is-transparent i,
+.store-header.is-transparent span {
+  color: var(--store-header-text) !important;
+}
+
+/* =========================
+ ✅ إظهار القائمة دائماً
+========================= */
+.store-header .main-nav-container,
+.store-header .main-nav,
+.store-header .s-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* =========================
+ ✅ الفوتر الأساسي (نفس فكرة الهيدر)
+========================= */
+.store-footer,
+.store-footer .top-navbar,
+.store-footer .main-nav-container,
+.store-footer .main-nav-container .inner,
+.store-footer .container,
+.store-footer .inner {
+  background-color: var(--smart-footer-bg) !important;
+}
+
+/* النصوص */
+.store-footer,
+.store-footer a,
+.store-footer button,
+.store-footer i,
+.store-footer span,
+.store-footer p,
+.store-footer li {
+  color: var(--smart-footer-text) !important;
+}
+
+/* =========================
+ ✅ تغطية كل عناصر الفوتر
+========================= */
+.store-footer * {
+  color: var(--smart-footer-text) !important;
+}
+
+/* =========================
+ ✅ الشريط السفلي (المشكلة عندك)
+========================= */
+.store-footer .footer-bottom,
+.store-footer__bottom,
+.store-footer .copyright,
+.store-footer .sub-footer {
+  background-color: var(--smart-footer-bg) !important;
+}
+
+.store-footer .footer-bottom *,
+.store-footer__bottom *,
+.store-footer .copyright *,
+.store-footer .sub-footer * {
+  color: var(--smart-footer-text) !important;
+}
+
+/* =========================
+ ✅ البوردر
+========================= */
+.store-footer hr,
+.store-footer .border {
+  border-color: var(--smart-footer-border) !important;
+}
+
+/* =========================
+ ✅ النصوص الثانوية
+========================= */
+.store-footer .text-muted,
+.store-footer small {
+  color: var(--smart-footer-muted) !important;
+}
+
+
+/* =========================
+ ✅ الشريط السفلي للفوتر
+========================= */
+.store-footer .footer-bottom,
+.store-footer .sub-footer,
+.store-footer .copyright,
+.store-footer .bottom-bar {
+  background-color: var(--smart-footer-bg) !important;
+  color: var(--smart-footer-text) !important;
+}
+
+/* النص داخل الشريط */
+.store-footer .footer-bottom *,
+.store-footer .sub-footer *,
+.store-footer .copyright * {
+  color: var(--smart-footer-text) !important;
+}
+
+/* إجبار آخر جزء بالفوتر */
+.store-footer > div:last-child {
+  background-color: var(--smart-footer-bg) !important;
+  color: var(--smart-footer-text) !important;
+}
+
+
+/* تغيير لون الجزء الأبيض داخل الفوتر */
+.store-footer .container,
+.store-footer .inner,
+.store-footer .footer-widgets,
+.store-footer .footer-top {
+  background-color: var(--smart-footer-bg) !important;
+}
+
+
+</style>
+>>>>>>> 6f268712c2ece684d9db294c488448df76667419
 {% endif %}
