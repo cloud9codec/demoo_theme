@@ -157,104 +157,37 @@
     ],
     "components": [
         {
-            "key": "186b3f4f-25cf-4d3c-abca-cef7eed6f0ab",
-            "title": "صور متحركة (محسنة)",
-            "icon": "sicon-image-carousel",
-            "path": "home.enhanced-slider",
-            "fields": [
-                {
-                  "type": "static",
-                  "format": "description",
-                  "id": "static-desc",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/main-slider.jpg?v=1.1'></div>"
-                },
-                {
-                    "id": "slides",
-                    "type": "collection",
-                    "format": "collection",
-                    "required": true,
-                    "minLength": 1,
-                    "maxLength": 10,
-                    "label": "",
-                    "item_label": "صورة",
-                    "value": [],
-                    "fields": [
-                        {
-                            "type": "string",
-                            "icon": "sicon-image",
-                            "value": null,
-                            "id": "slides.image",
-                            "label": "صورة البنر",
-                            "format": "image",
-                            "required": true,
-                            "placeholder": "",
-                            "description": "* المقاس المناسب للصورة هو 900×600 بكسل"
-                        },
-                        {
-                            "type": "string",
-                            "icon": "sicon-format-text-alt",
-                            "label": "عنوان رئيسي",
-                            "multilanguage": true,
-                            "id": "slides.title",
-                            "value": null,
-                            "required": false,
-                            "format": "text",
-                            "description": "يتم عرضه على الصورة بحجم بارز جداً، مع إضافة تأثير دخول للنص يضيف لمسة جمالية على معرض الصور.",
-                            "placeholder": "يمكنك إضافة عنوان بارز هنا...",
-                            "hide": false,
-                            "minLength": 0,
-                            "maxLength": 100
-                        },
-                        {
-                            "type": "string",
-                            "icon": "sicon-typography",
-                            "label": "نص إضافي",
-                            "multilanguage": true,
-                            "id": "slides.description",
-                            "value": null,
-                            "description": "يتم عرضه على الصورة بحجم أصغر من العنوان الرئيسي، مع إضافة تأثير دخول للنص يضيف لمسة جمالية على معرض الصور.",
-                            "format": "textarea",
-                            "required": false,
-                            "placeholder": "يمكنك إضافة تفاصيل إضافية هنا",
-                            "minLength": 0,
-                            "maxLength": 255
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "key": "2b1b130b-5b37-422a-9683-e0fd367460c0",
             "title": "روابط سريعة",
             "icon": "sicon-layout-grid-rearrange",
             "path": "home.main-links",
             "fields": [
                 {
-                  "type": "static",
-                  "format": "description",
-                  "id": "with-bg",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/main-links-with-bg.jpg?v=1.1'></div>",
-                  "conditions": [
-                    {
-                        "id": "merge_with_top_component",
-                        "operation": "=",
-                        "value": true
-                    }
-                  ]
-                }, 
+                    "type": "static",
+                    "format": "description",
+                    "id": "with-bg",
+                    "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/main-links-with-bg.jpg?v=1.1'></div>",
+                    "conditions": [
+                        {
+                            "id": "merge_with_top_component",
+                            "operation": "=",
+                            "value": true
+                        }
+                    ]
+                },
                 {
-                  "type": "static",
-                  "format": "description",
-                  "id": "without-bg",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/main-links.png?v=1.1'></div>",
-                  "conditions": [
-                    {
-                        "id": "merge_with_top_component",
-                        "operation": "=",
-                        "value": false
-                    }
-                  ]
-                }, 
+                    "type": "static",
+                    "format": "description",
+                    "id": "without-bg",
+                    "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/main-links.png?v=1.1'></div>",
+                    "conditions": [
+                        {
+                            "id": "merge_with_top_component",
+                            "operation": "=",
+                            "value": false
+                        }
+                    ]
+                },
                 {
                     "type": "string",
                     "icon": "sicon-format-text-alt",
@@ -418,11 +351,11 @@
             "path": "home.brands",
             "fields": [
                 {
-                  "type": "static",
-                  "format": "description",
-                  "id": "with-bg",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/brands.jpg?v=1.1'></div>"
-                }, 
+                    "type": "static",
+                    "format": "description",
+                    "id": "with-bg",
+                    "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/brands.jpg?v=1.1'></div>"
+                },
                 {
                     "type": "string",
                     "icon": "sicon-format-text-alt",
@@ -463,11 +396,11 @@
             "path": "home.slider-products-with-header",
             "fields": [
                 {
-                  "type": "static",
-                  "format": "description",
-                  "id": "with-bg",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/product-slider-with-header-bg.jpg?v=1.1'></div>"
-                }, 
+                    "type": "static",
+                    "format": "description",
+                    "id": "with-bg",
+                    "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/product-slider-with-header-bg.jpg?v=1.1'></div>"
+                },
                 {
                     "type": "string",
                     "icon": "sicon-image",
@@ -601,11 +534,11 @@
             "path": "home.enhanced-square-banners",
             "fields": [
                 {
-                  "type": "static",
-                  "format": "description",
-                  "id": "with-bg",
-                  "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/square-photos.jpg?v=1.1'></div>"
-                }, 
+                    "type": "static",
+                    "format": "description",
+                    "id": "with-bg",
+                    "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img src='https://cdn.salla.network/images/themes/raed/square-photos.jpg?v=1.1'></div>"
+                },
                 {
                     "id": "banners",
                     "type": "collection",
